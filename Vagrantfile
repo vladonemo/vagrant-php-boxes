@@ -152,7 +152,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder ".", '/vagrant'
   if settings.include? 'folders'
     settings["folders"].each do |folder|
-      mount_opts = []
+      mount_opts = ["dmode=775,fmode=664"]
 
       if (folder["type"] == "nfs")
           mount_opts = folder["mount_options"] ? folder["mount_options"] : ['actimeo=1']
@@ -166,7 +166,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Double-splat (**) operator only works with symbol keys, so convert
       options.keys.each{|k| options[k.to_sym] = options.delete(k) }
 
-      config.vm.synced_folder folder["map"], folder["to"], type: folder["type"] ||= nil, **options
+      config.vm.synced_folder folder["map"], folder["to"], type: folder["type"] ||= nil, group:'vagrant', owner:'www-data', **options
 
       # Bindfs support to fix shared folder (NFS) permission issue on Mac
       if Vagrant.has_plugin?("vagrant-bindfs")
