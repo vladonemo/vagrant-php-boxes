@@ -141,7 +141,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   if settings.include? 'keys'
     settings["keys"].each do |key|
       config.vm.provision "shell" do |s|
-        s.privileged = false
+        s.privileged = true
         s.inline = "echo \"$1\" > /home/#{VAGRANT_USER}/.ssh/$2 && chmod 600 /home/#{VAGRANT_USER}/.ssh/$2"
         s.args = [File.read(File.expand_path(key)), key.split('/').last]
       end
